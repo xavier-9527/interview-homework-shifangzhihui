@@ -1,23 +1,17 @@
 import "./MultiCheck.css";
 
-import React, { useEffect, FC, useId } from "react";
+import React, { useEffect, FC, useId, useMemo } from "react";
+import _ from "lodash/fp";
+import {
+  getColumnDataStruct,
+  fillFakeDataForColumnDataStruct,
+  getRenderData,
+} from "./utils";
 import { MultiCheckSection } from "./MultiCheckSection";
 import { MultiCheckHeader } from "./MultiCheckHeader";
 import { MultiCheckSectionColumn } from "./MultiCheckSectionColumn";
 import { MultiCheckSectionColumnItem } from "./MultiCheckSectionColumnItem";
 
-const data = [
-  [
-    { label: "aaa", value: "111" },
-    { label: "bbb", value: "222" },
-  ],
-  [
-    { label: "ccc", value: "333" },
-    { label: "ddd", value: "444" },
-  ],
-  [{ label: "eee", value: "555" }],
-  [{ label: "fff", value: "666" }],
-];
 export type Option = {
   label: string;
   value: string;
@@ -49,7 +43,7 @@ export type Props = {
 };
 
 export const MultiCheck: FC<Props> = React.memo((props) => {
-  const { onRender } = props;
+  const { onRender, columns, options } = props;
 
   {
     // NOTE Don't modify the code block, it can be considered as a performance hint,
@@ -61,6 +55,15 @@ export const MultiCheck: FC<Props> = React.memo((props) => {
   }
 
   const ID = useId();
+
+  const data = useMemo(() => {
+    const getRenderDataCurry = _.curry(getRenderData)(options);
+    return _.compose(
+      getRenderDataCurry,
+      fillFakeDataForColumnDataStruct,
+      getColumnDataStruct
+    )(options, columns as number);
+  }, [columns, options]);
 
   return (
     <div className="multi-check">
