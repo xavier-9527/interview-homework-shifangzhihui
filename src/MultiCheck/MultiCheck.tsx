@@ -1,7 +1,23 @@
 import "./MultiCheck.css";
 
-import React, { useEffect, FC } from "react";
+import React, { useEffect, FC, useId } from "react";
+import { MultiCheckSection } from "./MultiCheckSection";
+import { MultiCheckHeader } from "./MultiCheckHeader";
+import { MultiCheckSectionColumn } from "./MultiCheckSectionColumn";
+import { MultiCheckSectionColumnItem } from "./MultiCheckSectionColumnItem";
 
+const data = [
+  [
+    { label: "aaa", value: "111" },
+    { label: "bbb", value: "222" },
+  ],
+  [
+    { label: "ccc", value: "333" },
+    { label: "ddd", value: "444" },
+  ],
+  [{ label: "eee", value: "555" }],
+  [{ label: "fff", value: "666" }],
+];
 export type Option = {
   label: string;
   value: string;
@@ -44,5 +60,32 @@ export const MultiCheck: FC<Props> = React.memo((props) => {
     });
   }
 
-  return <div>TODO</div>;
+  const ID = useId();
+
+  return (
+    <div className="multi-check">
+      <div className="multi-check-list-board">
+        <MultiCheckHeader>{props.label}</MultiCheckHeader>
+        <MultiCheckSection>
+          {!!data &&
+            data.map((columnData, i) => {
+              return (
+                <MultiCheckSectionColumn
+                  key={`${ID}-${i}`}
+                  columnData={columnData}
+                  render={(item: Option) => {
+                    return (
+                      <MultiCheckSectionColumnItem
+                        key={`${ID}-${item.value}`}
+                        item={item}
+                      />
+                    );
+                  }}
+                />
+              );
+            })}
+        </MultiCheckSection>
+      </div>
+    </div>
+  );
 });
