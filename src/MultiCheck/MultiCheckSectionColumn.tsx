@@ -3,17 +3,17 @@ import { Option } from "./MultiCheck";
 import "./MultiCheck.css";
 
 type SectionColumnProps = {
-  columnData: Option[];
+  columnOptions: Option[];
   render: (props: Option) => React.ReactNode;
 };
 
 export const MultiCheckSectionColumn: React.FC<SectionColumnProps> = ({
-  columnData,
+  columnOptions,
   render,
 }) => {
   return (
     <div className="multi-check-section-column">
-      {!!columnData && columnData.map((item: Option) => render(item))}
+      {!!columnOptions && columnOptions.map((item: Option) => render(item))}
     </div>
   );
 };
